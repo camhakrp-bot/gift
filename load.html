@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday 🎂</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;overflow:hidden;background:#000;color:#fff;
+  font-family:'Times New Roman',serif;
+}
+/* pixel night */
+.pixel-bg{
+  position:fixed;inset:0;z-index:0;
+  background:
+   radial-gradient(circle at 20% 30%, #ffffff33 1px, transparent 2px),
+   radial-gradient(circle at 70% 60%, #ffffff22 1px, transparent 2px),
+   #000;
+  background-size:80px 80px;
+  animation:twinkle 3s infinite alternate;
+}
+@keyframes twinkle{to{filter:brightness(1.4)}}
+
+.center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+
+/* envelope */
+.envelope{
+ width:260px;height:170px;background:#3a2a22;border:3px solid #c9a46a;
+ margin-top:25vh;cursor:pointer;position:relative;
+}
+.envelope:before{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(135deg,transparent 50%,#2a1c16 50%);
+ clip-path:polygon(0 0,50% 50%,100% 0,100% 100%,0 100%);
+}
+
+/* letter */
+.letter{
+ width:85vw;max-width:320px;
+ background:#f5e6c8;color:#2b1d17;
+ padding:18px;border:2px solid #c9a46a;
+ margin-top:20px;display:none;line-height:1.6
+}
+
+/* cake */
+.cake{
+ position:absolute;bottom:-300px;left:50%;transform:translateX(-50%);
+ width:180px;height:120px;display:none;
+}
+.layer{
+ position:absolute;width:100%;border-radius:50%;
+ background:linear-gradient(#ffd1dc,#ff8fb1);
+}
+.layer.bottom{height:70px;bottom:0}
+.layer.top{height:50px;top:-30px;width:140px;left:20px}
+
+.candle{
+ position:absolute;top:-65px;left:50%;transform:translateX(-50%);
+ width:12px;height:50px;background:#fff;border-radius:4px
+}
+.flame{
+ position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+ width:18px;height:24px;background:radial-gradient(circle,#ffd700,#ff8c00);
+ border-radius:50%;animation:flicker .3s infinite
+}
+@keyframes flicker{50%{transform:translateX(-50%) scale(.8)}}
+
+.blow{position:absolute;left:-35px;top:5px;font-size:22px;opacity:0}
+
+/* countdown */
+.count{font-size:64px;margin-top:30px}
+
+/* fireworks */
+.firework{
+ position:fixed;width:6px;height:6px;border-radius:50%;
+ background:hsl(var(--h),100%,60%);
+ animation:boom 1.2s ease-out forwards
+}
+@keyframes boom{to{transform:scale(10);opacity:0}}
+
+/* final text */
+.final{
+ position:fixed;inset:0;display:none;
+ justify-content:center;align-items:center;
+ font-size:10vw;text-align:center;
+ animation:pulse 1s infinite alternate;
+}
+@keyframes pulse{to{transform:scale(1.1);text-shadow:0 0 30px gold}}
+</style>
+</head>
+<body>
+<div class="pixel-bg"></div>
+<div class="center">
+  <div class="envelope" id="env"></div>
+  <div class="letter" id="letter"></div>
+</div>
+
+<div class="cake" id="cake">
+  <div class="layer bottom"></div>
+  <div class="layer top"></div>
+  <div class="candle">
+    <div class="flame" id="flame"></div>
+    <div class="blow" id="blow">💨</div>
+  </div>
+</div>
+
+<div class="count" id="count"></div>
+<div class="final" id="final">🎉 CHÚC MỪNG TUỔI 25 RỰC RỠ!! 🎉</div>
+
+<audio id="song" src="audio/happybirthday.mp3"></audio>
+
+<script>
+const text = "Gửi anh hai yêu quý,\n\nEm gái bé nhỏ của anh chưa thể vượt trăm cây số về cạnh chung vui thổi nến chúc mừng được.\n\nChúc anh hai tuổi 25+ thật rực rỡ, luôn hạnh phúc và đạt được thật nhiều thành công trong cuộc sống.";
+let i=0;
+const env=document.getElementById('env');
+const letter=document.getElementById('letter');
+const cake=document.getElementById('cake');
+const count=document.getElementById('count');
+const flame=document.getElementById('flame');
+const blow=document.getElementById('blow');
+const song=document.getElementById('song');
+const final=document.getElementById('final');
+
+env.onclick=()=>{
+ env.remove();letter.style.display='block';
+ const typer=setInterval(()=>{
+   letter.innerHTML+=text.charAt(i)==='\n'?'<br>':text.charAt(i);
+   i++;if(i>=text.length){clearInterval(typer);setTimeout(showCake,2000)}
+ },50)
+}
+
+function showCake(){letter.remove();cake.style.display='block';cake.style.bottom='120px';countdown()}
+
+function countdown(){let n=3;count.innerText=n;const t=setInterval(()=>{
+ n--;if(n===0){count.innerText='';clearInterval(t);blowCandle()}else count.innerText=n},1000)}
+
+function blowCandle(){blow.style.opacity=1;flame.style.opacity=0;song.play();fireworks();setTimeout(()=>final.style.display='flex',2000)}
+
+function fireworks(){
+ for(let i=0;i<120;i++){
+  const f=document.createElement('div');
+  f.className='firework';
+  f.style.left=Math.random()*innerWidth+'px';
+  f.style.top=Math.random()*innerHeight+'px';
+  f.style.setProperty('--h',Math.random()*360);
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),1200)
+ }
+}
+</script>
+</body>
+</html>
